@@ -50,17 +50,8 @@ void loop() {
   int equalized_vertical = equalize_joystick_reading(verticalVal, vertical_mid);
   int equalized_horizontal = equalize_joystick_reading(horizontalVal, vertical_mid);
   
-//  int right_velocity = (equalized_vertical/max_velocity)*(equalized_horizontal + equalized_vertical);
-//  int left_velocity = (equalized_vertical/max_velocity)*(equalized_vertical - equalized_horizontal);
-
-  int right_velocity = max_min_two_hundred(equalized_horizontal + equalized_vertical);
-  int left_velocity = max_min_two_hundred(equalized_vertical - equalized_horizontal);
-  
-/*  Serial.print("R: ");
-  Serial.println(right_velocity, DEC);
-  Serial.print("L: ");
-  Serial.println(left_velocity, DEC);
-  delay(5000);*/
+  int left_velocity = max_min_two_hundred(equalized_horizontal + equalized_vertical);
+  int right_velocity = max_min_two_hundred(equalized_vertical - equalized_horizontal);
     
   Serial.write(ascii_V);
   
