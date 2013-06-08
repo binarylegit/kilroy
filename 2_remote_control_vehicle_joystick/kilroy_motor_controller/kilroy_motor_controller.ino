@@ -15,6 +15,7 @@
 unsigned long chargeTimer;
 unsigned long left_overload_time;
 unsigned long right_overload_time;
+unsigned long kill_timer_start = 0;
 const int REVERSE_MODE = 0;
 const int BRAKE_MODE = 1;
 const int FORWARD_MODE = 2;
@@ -22,6 +23,7 @@ int left_mode=1;
 int right_mode=1; 
 int left_velocity;
 int right_velocity;
+
 BatteryController *battery_controller;
 Motor *left_motor;
 Motor *right_motor;
@@ -97,6 +99,8 @@ void read_serial() {
     Serial.write(serial_data);
     
     if(serial_data == 86) { // V
+      kill_timer_start = 0;
+      
       // read velocity values
       int wheel_side_1 = blocking_serial_read();
       int wheel_direction_1 = blocking_serial_read();
@@ -117,9 +121,29 @@ void read_serial() {
         left_velocity = wheel_velocity_1;
       }
     } else if(serial_data == 79) { // O
+      kill_timer_start = 0;
       // TODO
     } else {
+      // unknown or no data, perhaps a bad connection?
+      //  data start kill timer
+      if(kill_timer_start == 0) {        
+        kill_timer_start = millis();
+      } else if( (millis() - kill_timer_start) >= 2000 ) {
+        left_velocity = 0;
+        right_velocity = 0;
+      }
+
       Serial.flush();
+    }
+  } else {
+    
+    // unknown or no data, perhaps a bad connection?
+    //  data start kill timer
+    if(kill_timer_start == 0) {        
+      kill_timer_start = millis();
+    } else if( (millis() - kill_timer_start) >= 2000 ) {
+      left_velocity = 0;
+      right_velocity = 0;
     }
   }
 }

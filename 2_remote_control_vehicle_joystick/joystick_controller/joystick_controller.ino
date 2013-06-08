@@ -48,10 +48,10 @@ void loop() {
   int horizontalVal = analogRead(horizontalIn);
 
   int equalized_vertical = equalize_joystick_reading(verticalVal, vertical_mid);
-  int equalized_horizontal = equalize_joystick_reading(horizontalVal, vertical_mid);
+  int equalized_horizontal = equalize_joystick_reading(horizontalVal, horizontal_mid);
   
-  int left_velocity = max_min_two_hundred(equalized_horizontal + equalized_vertical);
-  int right_velocity = max_min_two_hundred(equalized_vertical - equalized_horizontal);
+  int right_velocity = max_min_two_hundred(equalized_horizontal + equalized_vertical);
+  int left_velocity = max_min_two_hundred(equalized_vertical - equalized_horizontal);
     
   Serial.write(ascii_V);
   
